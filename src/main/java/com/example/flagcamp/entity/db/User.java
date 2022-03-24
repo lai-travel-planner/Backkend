@@ -1,5 +1,6 @@
 package com.example.flagcamp.entity.db;
 
+import com.example.flagcamp.entity.Response.Place;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "Users")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class User implements Serializable {
@@ -21,21 +22,23 @@ public class User implements Serializable {
     @JsonProperty("user_id")
     private String userId;
 
+    @Column(name = "user_name")
+    @JsonProperty("user_name")
+    private String userName;
+
     @JsonProperty("password")
     private String password;
 
-    @Column(name = "first_name")
-    @JsonProperty("first_name")
-    private String firstName;
+    @Column(name = "email_address")
+    @JsonProperty("email_address")
+    private String emailAddress;
 
-    @Column(name = "last_name")
-    @JsonProperty("last_name")
-    private String lastName;
     // fetch : EAGER, 得到user信息的时候，需要马上知道信息的值
     // joinTable : joinColumns = 主导 ， inversejoinColumns = 副的
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "place_records", joinColumns = { @JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "item_id")})
-    Set<Item> itemSet = new HashSet<>();
+    @JoinTable(name = "cart_records", joinColumns = { @JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "place_id")})
+    Set<place> placeSet = new HashSet<>();
+
 
     public String getUserId() {
         return userId;
@@ -43,6 +46,14 @@ public class User implements Serializable {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPassword() {
@@ -53,28 +64,19 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getEmailAddress() {
+        return emailAddress;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+    public Set<place> getPlaceSet() {
+        return placeSet;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public Set<Item> getItemSet() {
-        return itemSet;
-    }
-
-    public void setItemSet(Set<Item> itemSet) {
-        this.itemSet = itemSet;
+    public void setPlaceSet(Set<place> placeSet) {
+        this.placeSet = placeSet;
     }
 
 }
